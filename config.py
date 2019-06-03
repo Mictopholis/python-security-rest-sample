@@ -7,8 +7,8 @@ other secure storage mechanism.
 # Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 # See LICENSE in the project root for license information.
 
-CLIENT_ID = 'ENTER_YOUR_CLIENT_ID'
-CLIENT_SECRET = 'ENTER_YOUR_CLIENT_SECRET'
+CLIENT_ID = 'fbfca6c6-37fd-42e1-bd24-d3f1ec0df380'
+CLIENT_SECRET = 'fbfca6c6-37fd-42e1-bd24-d3f1ec0df380'
 REDIRECT_URI = 'http://localhost:5000/login/authorized'
 
 WEBHOOK_DATA = {'changeType': 'updated',
