@@ -19,26 +19,26 @@ from flask_session import Session
 import config
 
 
-APP = flask.Flask(__name__, template_folder='static/templates')
-APP.debug = True
-APP.secret_key = 'development'
-APP.config['SESSION_TYPE'] = 'filesystem'
+app = flask.Flask(__name__, template_folder='static/templates')
+app.debug = True
+app.secret_key = 'development'
+app.config['SESSION_TYPE'] = 'filesystem'
 
-if APP.secret_key == 'development':
+if app.secret_key == 'development':
     # ONLY TO BE USED IN DEVELOPMENT 
     import os
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # allows http requests
     os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'  # allows tokens to contain additional permissions
     
 
-Session(APP)
-SOCKETIO = SocketIO(APP, manage_session=False, async_mode="gevent")
+Session(app)
+SOCKETIO = SocketIO(app, manage_session=False, async_mode="gevent")
 MSGRAPH = OAuth2Session(config.CLIENT_ID,
                         redirect_uri=config.REDIRECT_URI,
                         scope=config.SCOPES)
 
 
-@APP.route('/')
+@app.route('/')
 def homepage():
     """Render the home page."""
     if 'VIEW_DATA' not in flask.session:
@@ -61,7 +61,7 @@ def homepage():
                                  Config=config)
 
 
-@APP.route('/login')
+@app.route('/login')
 def login():
     """Prompt user to authenticate."""
     flask.session.clear()
@@ -70,7 +70,7 @@ def login():
     return flask.redirect(authorization_url)
 
 
-@APP.route('/login/authorized')
+@app.route('/login/authorized')
 def authorized():
     """Handler for the application's Redirect Uri."""
     # redirected admin consent flow
@@ -130,7 +130,7 @@ def get_providers():
     return providers
 
 
-@APP.route('/logout')
+@app.route('/logout')
 def logout():
     """signs out the current user from the session."""
     flask.session.clear()
@@ -154,7 +154,7 @@ def requires_auth(f):
     return decorated
 
 
-@APP.route('/GetMyEmailAddress')
+@app.route('/GetMyEmailAddress')
 @requires_auth
 def get_my_email_address():
     """Make Rest API call to graph for current users email"""
@@ -171,7 +171,7 @@ def get_my_email_address():
     return flask.redirect(flask.url_for('homepage'))
 
 
-@APP.route('/GetAlerts', methods=['POST', 'GET'])
+@app.route('/GetAlerts', methods=['POST', 'GET'])
 @requires_auth
 def get_alerts():
     """Make Rest API call to security graph for alerts"""
@@ -245,7 +245,7 @@ def build_filter_query(form):
     return filtered_query
 
 
-@APP.route('/DisplayAlert/<alert_id>')
+@app.route('/DisplayAlert/<alert_id>')
 @requires_auth
 def display_alert(alert_id):
     """Renders the alert page"""
@@ -429,7 +429,7 @@ def get_actions():
     return security_actions
 
 
-@APP.route('/SecureScore', methods=['GET'])
+@app.route('/SecureScore', methods=['GET'])
 @requires_auth
 def secure_score():
     """ Show the secure score page. """
@@ -440,7 +440,7 @@ def secure_score():
                                  Config=config)
 
 
-@APP.route('/UpdateAlert', methods=['POST', 'GET'])
+@app.route('/UpdateAlert', methods=['POST', 'GET'])
 @requires_auth
 def update_alert():
     """ Make Rest API call to security graph to update an alert """
@@ -494,7 +494,7 @@ def update_alert():
     return flask.redirect(flask.url_for('homepage'))
 
 
-@APP.route('/Subscribe', methods=['POST', 'GET'])
+@app.route('/Subscribe', methods=['POST', 'GET'])
 @requires_auth
 def subscribe():
     if flask.request.method == 'POST':
@@ -571,7 +571,7 @@ def subscribe():
     return flask.redirect(flask.url_for('homepage'))
 
 
-@APP.route('/Actions', methods=['POST', 'GET'])
+@app.route('/Actions', methods=['POST', 'GET'])
 @requires_auth
 def actions():
     if flask.request.method == 'POST':
@@ -618,7 +618,7 @@ def actions():
     return flask.redirect(flask.url_for('homepage'))
 
 
-@APP.route('/listen', methods=['POST', 'GET'])
+@app.route('/listen', methods=['POST', 'GET'])
 def listen():
     if flask.request.method == 'POST':
         validation_token = flask.request.args.get('validationToken', '')
@@ -658,4 +658,4 @@ def request_headers(headers=None):
 
 if __name__ == '__main__':
 
-    SOCKETIO.run(APP)
+    SOCKETIO.run(app)
