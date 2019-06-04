@@ -134,4 +134,4 @@ Packages:
 * [Flask-OAuthlib](https://flask-oauthlib.readthedocs.io/en/latest/)
 * [Requests: HTTP for Humans](http://docs.python-requests.org/en/master/)
 
-Copyright (c) 2018 Microsoft Corporation. All rights reserved.
+Copyright (c) 2018 Microsoft Corporation. All rights reserved  .
